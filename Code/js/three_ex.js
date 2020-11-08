@@ -30,13 +30,21 @@ const RADIUS = 40;
 const geometry2 = new THREE.OctahedronGeometry(RADIUS, 0)
 
 //  Material 생성
-const material = new THREE.MeshBasicMaterial({color: '#ff3030'});
+const material = new THREE.MeshLambertMaterial({color: '#ff3030'});
 
 //  만들어둔 Geometry 와 material 로 Mesh 생성
 const mesh = new THREE.Mesh(geometry2, material);
 mesh.position.z = -RADIUS * 10
 
+//  광원 생성
+const pointLight = new THREE.PointLight(0xFFFFFF, 0.5);
+
+pointLight.position.x = 100;
+pointLight.position.y = 100;
+pointLight.position.z = 30;
+
 //  Scene 에 Object 추가
+scene.add(pointLight);
 scene.add(mesh);
 
 const WIDTH = 200;
@@ -53,13 +61,20 @@ const camera = new THREE.PerspectiveCamera(
     NEAR,
     FAR
 );
-
-console.log(camera)
-
 renderer.setSize(WIDTH, HEIGHT);
 
 const container = document.querySelector("#three");
-
 container.appendChild(renderer.domElement);
 
-renderer.render(scene, camera);
+// renderer.render(scene, camera);
+
+function update () {
+    const speed = Math.random() / 20
+    mesh.rotation.x += speed
+    mesh.rotation.y += speed
+    mesh.rotation.z += speed
+    renderer.render(scene, camera)
+    requestAnimationFrame(update)
+}
+
+requestAnimationFrame(update)
