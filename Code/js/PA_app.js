@@ -7,10 +7,6 @@ Physijs.scripts.ammo = "../../Resources/Physijs/ammo.js";
 
 var initScene, renderer, scene, camera, box;
 
-// var velocity = new THREE.Vector3();
-// var prevTime = performance.now();
-// var moveForward = false;
-
 var de2ra = function (degree) {
     return degree * (Math.PI / 180.0);
 };
@@ -45,16 +41,13 @@ initScene = async function () {
     scene.add(axesHelper);
 
     // Load Penguin
-    const loader = new OBJLoader();
     var material = new THREE.MeshStandardMaterial();
     const texture = new THREE.TextureLoader().load(
         "../../Resources/obj/penguin/Tex_Penguin.png"
     );
-
     material.map = texture;
-    var penguin;
-
     objLoadToPhysijs("../../Resources/obj/penguin/Mesh_Penguin.obj", material);
+    
     // Add plane
     const plane = new Physijs.BoxMesh(
         new THREE.PlaneGeometry(200, 1000),
@@ -92,44 +85,6 @@ initScene = async function () {
     requestAnimationFrame(render);
 };
 
-var render = function () {
-    scene.simulate(); // run physics
-    requestAnimationFrame(render);
-    renderer.render(scene, camera); // render the scene
-
-    // //lets make sure we can move camera smoothly based on user's performance.
-    // var time = performance.now();
-    // var delta = (time - prevTime) / 1000;
-
-    // //reset z velocity to be 0 always. But override it if user presses up or w. See next line...
-    // velocity.z -= velocity.z * 10.0 * delta;
-    // //if the user pressed 'up' or 'w', set velocity.z to a value > 0.
-    // if (moveForward) velocity.z -= 400.0 * delta;
-
-    // //pass velocity as an argument to translateZ and call it on camera.
-    // camera.translateZ(velocity.z * delta);
-
-    // prevTime = time;
-
-    penguinMovement();
-};
-
-function penguinMovement() {
-    var oldVector = penguin.getLinearVelocity(); // Vector of velocity the player already has
-    var penguinVec = new THREE.Vector3(0, oldVector.y, oldVector.z);
-    if (moveLeft) {
-        var penguinVec = new THREE.Vector3(
-            -1 * speed,
-            oldVector.y,
-            oldVector.z
-        );
-    } 
-    if (moveRight) {
-        var penguinVec = new THREE.Vector3(1 * speed, oldVector.y, oldVector.z);
-    } 
-    penguin.setLinearVelocity(penguinVec); // We use an updated vector to redefine its velocity
-}
-
 function objLoadToPhysijs(src, material) {
     const loader = new OBJLoader();
     loader.load(src, function (object) {
@@ -165,11 +120,23 @@ function objLoadToPhysijs(src, material) {
     });
 }
 
-window.onload = initScene();
+function penguinMovement() {
+    var oldVector = penguin.getLinearVelocity(); // Vector of velocity the player already has
+    var penguinVec = new THREE.Vector3(0, oldVector.y, oldVector.z);
+    if (moveLeft) {
+        var penguinVec = new THREE.Vector3(
+            -1 * speed,
+            oldVector.y,
+            oldVector.z
+        );
+    } 
+    if (moveRight) {
+        var penguinVec = new THREE.Vector3(1 * speed, oldVector.y, oldVector.z);
+    } 
+    penguin.setLinearVelocity(penguinVec); // We use an updated vector to redefine its velocity
+}
 
 function setupKeyControls() {
-    var movement = new THREE.Vector3(0.0);
-    var forceAmount = 20;
     document.onkeydown = function (e) {
         switch (e.keyCode) {
             case 37: //좌
@@ -196,4 +163,12 @@ function setupKeyControls() {
     };
 }
 
-//TODO: 충돌 처리
+var render = function () {
+    scene.simulate(); // run physics
+    requestAnimationFrame(render);
+    renderer.render(scene, camera); // render the scene
+
+    penguinMovement();
+};
+
+window.onload = initScene();
