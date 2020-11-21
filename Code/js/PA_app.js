@@ -14,7 +14,9 @@ var de2ra = function (degree) {
 var penguin;
 var moveLeft = false;
 var moveRight = false;
-var speed = 30.0;
+var speed = 70.0;
+var obstacles = [];
+var obstacleSpeed = 100;
 
 initScene = async function () {
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -32,7 +34,7 @@ initScene = async function () {
         1,
         5000
     );
-    camera.position.set(0, 200, 100);
+    camera.position.set(0, 400, 100);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
 
@@ -47,7 +49,7 @@ initScene = async function () {
     );
     material.map = texture;
     objLoadToPhysijs("../../Resources/obj/penguin/Mesh_Penguin.obj", material);
-    
+
     // Add plane
     const plane = new Physijs.BoxMesh(
         new THREE.PlaneGeometry(200, 1000),
@@ -70,20 +72,45 @@ initScene = async function () {
     plane.rotation.x = de2ra(90);
     plane.position.z = -200;
     plane.position.y = -10;
+    plane.name = "plane";
     scene.add(plane);
 
-    // TEST
+    // TEST----------------------------------------------------------
     var box = new Physijs.BoxMesh(
         new THREE.BoxGeometry(50, 30, 100),
-        // new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0}),
-        new THREE.MeshBasicMaterial({ wireframe: true, opacity: 1 }) 
+        new THREE.MeshBasicMaterial({ wireframe: true, opacity: 1 })
     );
-    box.position.set(-40, 10, 0);
-    scene.add(box);
-    // TEST
+    setObstacle(box, [-40, 10, -200]);
+    box = new Physijs.BoxMesh(
+        new THREE.BoxGeometry(50, 30, 100),
+        new THREE.MeshBasicMaterial({ wireframe: true, opacity: 1 })
+    );
+    setObstacle(box, [40, 10, -200]);
+    // TEST-----------------------------------------------------------
 
     requestAnimationFrame(render);
 };
+
+function setObstacle(object, position) {
+    console.log(position);
+    object.name = "obstacle";
+    object.position.set(position[0], position[1], position[2]);
+    scene.add(object);
+    obstacles.push(object);
+    const curVec = object.getLinearVelocity();
+    object.setLinearVelocity(
+        new THREE.Vector3(curVec.x, curVec.y, obstacleSpeed)
+    );
+}
+
+function obstaclePositionCheck() {
+    obstacles.forEach(function (ob) {
+        if (ob.position.z >= 0.0) {
+            scene.remove(ob);
+            obstacles.splice(obstacles.indexOf(ob), 1);
+        }
+    });
+}
 
 function objLoadToPhysijs(src, material) {
     const loader = new OBJLoader();
@@ -111,13 +138,29 @@ function objLoadToPhysijs(src, material) {
         obj.rotation.y = de2ra(180);
         obj.position.set(0, 10, 0);
         penguin = obj;
-        penguin.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
-            console.log("collision!!");
-            // `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`
-        });
+        penguin.addEventListener(
+            "collision",
+            function (
+                other_object,
+                relative_velocity,
+                relative_rotation,
+                contact_normal
+            ) {
+                console.log(other_object.name);
+                if (other_object.name === "obstacle") {
+                    obstacleCollistion(other_object);
+                }
+                // `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`
+            }
+        );
         scene.add(obj);
         setupKeyControls();
     });
+}
+
+// 장애물이랑 충돌시
+function obstacleCollistion(collisionObject) {
+    console.log(collisionObject.name);
 }
 
 function penguinMovement() {
@@ -129,10 +172,10 @@ function penguinMovement() {
             oldVector.y,
             oldVector.z
         );
-    } 
+    }
     if (moveRight) {
         var penguinVec = new THREE.Vector3(1 * speed, oldVector.y, oldVector.z);
-    } 
+    }
     penguin.setLinearVelocity(penguinVec); // We use an updated vector to redefine its velocity
 }
 
@@ -169,6 +212,7 @@ var render = function () {
     renderer.render(scene, camera); // render the scene
 
     penguinMovement();
+    obstaclePositionCheck();
 };
 
 window.onload = initScene();
