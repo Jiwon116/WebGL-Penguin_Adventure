@@ -54,11 +54,6 @@ initScene = async function () {
     material.map = texture;
     var penguin;
 
-    var physi_penguin = new Physijs.CapsuleMesh(
-        new THREE.CylinderGeometry(0.5, 0.5, 2.0),
-        new Physijs.createMaterial(material, 0.2, 0.9)
-    );
-
     objLoadToPhysijs("../../Resources/obj/penguin/Mesh_Penguin.obj", material);
     // Add plane
     const plane = new Physijs.BoxMesh(
@@ -79,12 +74,20 @@ initScene = async function () {
 
     material_plane.map = texture_plane;
     plane.material = material_plane;
-    plane.rotation.x = de2ra(60);
+    plane.rotation.x = de2ra(90);
     plane.position.z = -200;
-    plane.position.y = -130;
+    plane.position.y = -10;
     scene.add(plane);
 
-    console.log(penguin);
+    // TEST
+    var box = new Physijs.BoxMesh(
+        new THREE.BoxGeometry(50, 30, 100),
+        // new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0}),
+        new THREE.MeshBasicMaterial({ wireframe: true, opacity: 1 }) 
+    );
+    box.position.set(-40, 10, 0);
+    scene.add(box);
+    // TEST
 
     requestAnimationFrame(render);
 };
@@ -151,8 +154,12 @@ function objLoadToPhysijs(src, material) {
         obj.scale.set(0.3, 0.3, 0.3);
         obj.rotation.x = de2ra(-25);
         obj.rotation.y = de2ra(180);
-        obj.position.set(0, 24.5, 0);
+        obj.position.set(0, 10, 0);
         penguin = obj;
+        penguin.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+            console.log("collision!!");
+            // `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`
+        });
         scene.add(obj);
         setupKeyControls();
     });
@@ -188,3 +195,5 @@ function setupKeyControls() {
         }
     };
 }
+
+//TODO: 충돌 처리
