@@ -9,7 +9,7 @@ var USE_WIREFRAME = false;
 
 // An object to hold all the things needed for our loading screen
 var loadingScreen = {
-   scene: new THREE.Scene(),
+   scene: new Physijs.Scene(),
    camera: new THREE.PerspectiveCamera(90, 1280/720, 0.1, 100),
    box: new THREE.Mesh(
       new THREE.BoxGeometry(0.5,0.5,0.5),
