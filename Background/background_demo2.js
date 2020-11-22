@@ -80,12 +80,12 @@ function ObstacleMaker() {
 
   //at ob_z
   if(pos % 2 == 0){
-    meshes[i].position.set(-ob_x[x_pos%5], 0, ob_z);
+    //meshes[i].position.set(-ob_x[x_pos%5], 0, ob_z-3);
     phy_boxes[i].position.set(-ob_x[x_pos%5], 0, ob_z);
 
   }else
   {
-    meshes[i].position.set(ob_x[x_pos%5], 0, ob_z);
+    //meshes[i].position.set(ob_x[x_pos%5], 0, ob_z-3);
     phy_boxes[i].position.set(ob_x[x_pos%5], 0, ob_z);
 
   }
@@ -101,8 +101,11 @@ function ObstacleMaker() {
 
   } */
   meshes[i].rotation.set(0,10,0);
-  scene.add(meshes[i]);
+/*   scene.add(meshes[i]);
+  scene.add(phy_boxes[i]); */
+  phy_boxes[i].add(meshes[i]);
   scene.add(phy_boxes[i]);
+
   i++;
   //speed up
   if(i == 10){
@@ -197,7 +200,7 @@ var models = {
 
 
 function init(){
-  scene = new THREE.Scene();
+  scene = new Physijs.Scene();
   camera = new THREE.PerspectiveCamera(90,1200/720,0.1,1000);
   clock = new THREE.Clock();
 
