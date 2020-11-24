@@ -1,0 +1,86 @@
+<html>
+<meta charset="utf-8">
+
+<head>
+  <title>Home</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poor+Story&display=swap" rel="stylesheet">
+  <style type="text/css">
+    a {
+      text-decoration: none;
+    }
+
+    body {
+      background: url('menu-bg.png') no-repeat center fixed;
+      background-size: cover;
+    }
+
+    .game-title {
+      position:relative;
+      /*
+      background:rgba(255,255,255,0.7);
+      */
+      padding:35px;
+      top: 20px;
+      text-align:center;
+    }
+
+    .game-title h2{
+      font-family: 'Poor Story', cursive;
+      text-align:center;
+      font-size:80px;
+      font-weight:normal;
+      color:#777;
+    }
+
+    .btn-group {
+      position: fixed;
+      margin: 50px 0px 0px 650px;
+    }
+
+    .btn-group .button {
+      font-family: 'Poor Story', cursive;
+      background-color: #4374D9;
+      /* blue */
+      border: 1px solid #4374D9;
+      color: white;
+      padding: 23px 35px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 22px;
+      cursor: pointer;
+      width: 150px;
+      display: block;
+      border-radius: 12px;
+      margin: 20px 0px 0px 0px;
+    }
+
+    .btn-group .button:not(:last-child) {
+      border-bottom: none;
+      /* Prevent double borders */
+    }
+
+    .btn-group .button:hover {
+      border: 1px solid #B2CCFF;
+      background-color: #B2CCFF;
+      color: black;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="game-title">
+    <h2>
+      Penguin's Adventure
+    </h2>
+  </div>
+  <div class="btn-group">
+    <button class="button" onclick = "location.href = 'mainScene_1st.html'">1인칭</button>
+    <button class="button" onclick = "location.href = 'mainScene_3rd.html'">3인칭</button>
+    <button class="button">랭킹보기</button>
+    <button class="button">크레딧</button>
+  </div>
+</body>
+
+</html>

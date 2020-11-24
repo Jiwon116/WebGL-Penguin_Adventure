@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Penguin's Adventure</title>
+    <script type="text/javascript" src="../../node_modules/three/build/three.js"></script>
+    <script type="text/javascript" src="../../Resources/Physijs/physi.js"></script>
+    <script type="text/javascript" src="../../Resources/Physijs/physijs_worker.js"></script>
+    <script src="../../node_modules/three/examples/js/loaders/MTLLoader.js"></script>
+    <script src="../../node_modules/three/examples/js/loaders/OBJLoader.js"></script>
+    <script type="module" src="../js/sceneMaker_1st.js"></script>
+  </head>
+  <body>
+
+    <!-- background music -->
+    <iframe src="silence.mp3" allow="autoplay" id="audio" style="display:none"></iframe>
+    <audio id="audio" autoplay>
+    <source src="Jingle Bells for Kids Instrumental 2016-NOC-NO Copyright Music library-Royalty free background music.mp3">
+    </audio>
+
+    <script>
+      function Element(tagName) {
+        if (this == window) {
+          return new Element(id);
+        }
+        var that = this;
+        that.$element = document.createElement(tagName);
+        document.body.appendChild(that.$element);
+      }
+  
+      function Textable(text) {
+        var that = this;
+        Object.defineProperty(this, "text", {
+          set: function(value) {
+            that.$element.innerHTML = value;
+          },
+          get: function() {
+            return that.$element.innerHTML;
+          }
+        });
+        that.text = text;
+      }
+  
+      Element.prototype.show = function() {
+        this.$element.style.display = "inherit";
+      }
+      Element.prototype.hide = function() {
+        this.$element.style.display = "none";
+      }
+  
+      Text.prototype = Object.create(Element.prototype);
+  
+      function Text(text) {
+        if (this == window) {
+          return new Text(id);
+        }
+        Element.call(this, "p");
+        Textable.call(this, text);
+      }
+  
+      BigText.prototype = Object.create(Element.prototype);
+  
+      function BigText(text) {
+        if (this == window) {
+          return new Text(id);
+        }
+        Element.call(this, "h1");
+        Textable.call(this, text);
+      }
+  
+      Button.prototype = Object.create(Element.prototype);
+  
+      function Button(name) {
+        if (this == window) {
+          return new Button();
+        }
+        Element.call(this, "button");
+        Textable.call(this, name);
+      }
+      Button.prototype.on = function(event, handler) {
+        this.$element.addEventListener(event, handler.bind(this));
+        return this;
+      }
+  
+      function Timer() {
+        this.tid = null;
+        this.startTime = null;
+        this.displayTarget = null;
+        this.endTime = null;
+      }
+      Timer.prototype.start = function() {
+        if (!this.tid) {
+          this.tid = setInterval(this._onHit.bind(this), 0);
+          this.startTime = Date.now();
+        } else {
+          throw new Error("Already Started!");
+        }
+      }
+      Timer.prototype.stop = function() {
+        clearInterval(this.tid);
+        this.tid = null;
+        this.startTime = null;
+      }
+      Timer.prototype.toString = function() {
+        var time = Date.now() - this.startTime;
+        return time / 1000 + "";
+      }
+      Timer.prototype.time = function() {
+        return Date.now() - this.startTime;
+      }
+      Timer.prototype.displayTo = function(target) {
+        this.displayTarget = target;
+      }
+      Timer.prototype._onHit = function() {
+        if (this.displayTarget) {
+          this.displayTarget.text = this.toString();
+        }
+      }
+  
+      var time = new BigText();
+      time.text = "Ready";
+      var start = new Button("Start");
+      var stop = new Button("Stop");
+      var timer = new Timer();
+      start.on("click", function() {
+        timer.start();
+      });
+      stop.on("click", function() {
+        timer.stop();
+      });
+      timer.displayTo(time);
+    </script>
+
+    <div id=monitor>Camera Position</div>
+    <div id=rotation>Camera Rotation</div>
+
+  </body>
+</html>
