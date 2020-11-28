@@ -29,6 +29,9 @@ var timeSleep = 10000;
 var meshes = {};
 var phy_boxes = [];
 
+var backgrounds = [];
+var backgroundsOrigin = [];
+
 var timerId;
 
 var obstacleSpeed = 10;
@@ -42,6 +45,7 @@ var penguin_box;
 var moveLeft = false;
 var moveRight = false;
 var speed = -5.0;
+var backgroundSpeed = 0.1;
 
 var loaded = false;
 
@@ -183,18 +187,23 @@ function ObstacleMaker() {
     //speed up
     if (i == 10) {
         timeSleep = 7000;
+        backgroundSpeed *= 2;
         timerId = setInterval(ObstacleMaker, timeSleep);
     } else if (i == 30) {
         timeSleep = 5000;
+        backgroundSpeed *= 2;
         timerId = setInterval(ObstacleMaker, timeSleep);
     } else if (i == 70) {
         timeSleep = 3000;
+        backgroundSpeed *= 2;
         timerId = setInterval(ObstacleMaker, timeSleep);
     } else if (i == 120) {
         timeSleep = 1000;
+        backgroundSpeed *= 2;
         timerId = setInterval(ObstacleMaker, timeSleep);
     } else if (i == 150) {
         timeSleep = 700;
+        backgroundSpeed *= 2;
         timerId = setInterval(ObstacleMaker, timeSleep);
     }
 }
@@ -474,86 +483,99 @@ function init() {
     animate();
 }
 
+var tmp;
+function setGrasses() {
+    var i = 0;
+    for (; i < 30; i++) {
+        backgroundsOrigin[i] = getRandom(20, 40);
+        backgrounds.push(models.grass.mesh.clone());
+        backgrounds.push(models.flower_red.mesh.clone());
+        backgrounds[i].position.set(
+            getRandom(-15, 15),
+            0,
+            backgroundsOrigin[i]
+        );
+        backgroundsOrigin[i + 1] = getRandom(20, 40);
+        backgrounds[i + 1].position.set(
+            getRandom(-15, 15),
+            0,
+            getRandom(20, 40)
+        );
+        scene.add(backgrounds[i]);
+        scene.add(backgrounds[i + 1]);
+    }
+    console.log(i);
+    setMountains(i);
+}
+
+function setMountains(num) {
+    backgrounds[num] = models.background.mesh.clone();
+    backgrounds[num + 1] = models.background.mesh.clone();
+    backgrounds[num + 2] = models.background.mesh.clone();
+    backgrounds[num + 3] = models.background.mesh.clone();
+    backgrounds[num + 4] = models.background.mesh.clone();
+    backgrounds[num + 5] = models.background.mesh.clone();
+
+    backgrounds[num].position.set(15, -2, 20);
+    backgroundsOrigin[num] = 20;
+    backgrounds[num].scale.set(2, 2, 2);
+    backgrounds[num].rotation.set(0, 5, 0);
+
+    backgrounds[num + 1].position.set(-15, -2, 15);
+    backgroundsOrigin[num + 1] = 15;
+    backgrounds[num + 1].scale.set(2, 2, 2);
+    backgrounds[num + 1].rotation.set(0, -5.1, 0);
+
+    backgrounds[num + 2].position.set(15, -2, 50);
+    backgroundsOrigin[num + 2] = 50;
+    backgrounds[num + 2].scale.set(2, 3, 2);
+    backgrounds[num + 2].rotation.set(0, 5, 0);
+
+    backgrounds[num + 3].position.set(-15, -2, 55);
+    backgroundsOrigin[num + 3] = 55;
+    backgrounds[num + 3].scale.set(2, 2, 2);
+    backgrounds[num + 3].rotation.set(0, -5.1, 0);
+
+    backgrounds[num + 4].position.set(15, -2, 30);
+    backgroundsOrigin[num + 4] = 30;
+    backgrounds[num + 4].scale.set(2, 3, 2);
+    backgrounds[num + 4].rotation.set(0, 5, 0);
+
+    backgrounds[num + 5].position.set(-15, -2, 30);
+    backgroundsOrigin[num + 5] = 30;
+    backgrounds[num + 5].scale.set(2, 2, 2);
+    backgrounds[num + 5].rotation.set(0, -5.1, 0);
+
+    scene.add(backgrounds[num]);
+    scene.add(backgrounds[num + 1]);
+    scene.add(backgrounds[num + 2]);
+}
+
+function setBackground() {
+    setGrasses();
+}
+
+function moveBackground() {
+    for (var i = 0; i < backgrounds.length; i++) {
+        backgrounds[i].position.z -= backgroundSpeed;
+        if (backgrounds[i].position.z < -4) {
+            backgrounds[i].position.z = getRandom(backgroundsOrigin[i], backgroundsOrigin[i] + 7);
+        }
+    }
+
+    // backgrounds.forEach(function (ob) {
+    //     ob.position.z -= backgroundSpeed;
+    //     if (backgroundsOrigin)
+    // })
+}
+
 //-----------------------------------------------------------
 //---------------------- Resource Load ----------------------
 //-----------------------------------------------------------
 
 // Runs when all resources are loaded
 function onResourcesLoaded() {
-    // Clone models into meshes.
-    meshes["grass1"] = models.grass.mesh.clone();
-    meshes["grass2"] = models.grass.mesh.clone();
-    meshes["grass3"] = models.grass.mesh.clone();
-    meshes["grass4"] = models.grass.mesh.clone();
-    meshes["grass5"] = models.grass.mesh.clone();
-    meshes["grass6"] = models.grass.mesh.clone();
-
-    meshes["flower_red1"] = models.flower_red.mesh.clone();
-    meshes["flower_red2"] = models.flower_red.mesh.clone();
-    meshes["flower_red3"] = models.flower_red.mesh.clone();
-    meshes["flower_red4"] = models.flower_red.mesh.clone();
-
-    meshes["stone1"] = models.stone.mesh.clone();
-    meshes["stone2"] = models.stone.mesh.clone();
-    meshes["stone3"] = models.stone.mesh.clone();
-    meshes["stone4"] = models.stone.mesh.clone();
-
-    meshes["ice_sheet1"] = models.ice_sheet.mesh.clone();
-    meshes["ice_sheet2"] = models.ice_sheet.mesh.clone();
-    meshes["ice_sheet3"] = models.ice_sheet.mesh.clone();
-    meshes["ice_sheet4"] = models.ice_sheet.mesh.clone();
-
-    meshes["background"] = models.background.mesh.clone();
-    meshes["background2"] = models.background.mesh.clone();
-
-    // Reposition individual meshes, then add meshes to scene
-    meshes["grass1"].position.set(
-        (Math.random() * 100).toFixed(0) % 15,
-        0,
-        ((Math.random() * 100).toFixed(0) % 6) + 5
-    );
-    scene.add(meshes["grass1"]);
-    meshes["grass2"].position.set(
-        -(Math.random() * 100).toFixed(0) % 15,
-        0,
-        ((Math.random() * 100).toFixed(0) % 6) + 5
-    );
-    scene.add(meshes["grass2"]);
-    meshes["grass3"].position.set(
-        -(Math.random() * 100).toFixed(0) % 15,
-        0,
-        ((Math.random() * 100).toFixed(0) % 6) + 5
-    );
-    scene.add(meshes["grass3"]);
-    meshes["grass4"].position.set(
-        (Math.random() * 100).toFixed(0) % 15,
-        0,
-        ((Math.random() * 100).toFixed(0) % 6) + 5
-    );
-    scene.add(meshes["grass4"]);
-    meshes["grass5"].position.set(
-        (Math.random() * 100).toFixed(0) % 15,
-        0,
-        ((Math.random() * 100).toFixed(0) % 6) + 5
-    );
-    scene.add(meshes["grass5"]);
-    meshes["grass6"].position.set(
-        (Math.random() * 100).toFixed(0) % 15,
-        0,
-        ((Math.random() * 100).toFixed(0) % 6) + 5
-    );
-    scene.add(meshes["grass6"]);
-
-    meshes["background"].position.set(15, -2, 10);
-    meshes["background"].scale.set(2, 2, 2);
-    meshes["background"].rotation.set(0, 5, 0);
-    scene.add(meshes["background"]);
-
-    meshes["background2"].position.set(-15, -2, 10);
-    meshes["background2"].scale.set(2, 2, 2);
-    meshes["background2"].rotation.set(0, -5.1, 0);
-
-    scene.add(meshes["background2"]);
+    setBackground();
 
     // penguin
     meshes["penguin"] = models.uzi.mesh.clone();
@@ -735,6 +757,7 @@ function animate() {
         camera.rotation.z.toFixed(1);
 
     obstaclePositionCheck();
+    moveBackground();
 }
 
 //-----------------------------------------------------------
@@ -749,49 +772,51 @@ function keyUp(event) {
 }
 
 function penguinMovement() {
-  if (!loaded) {
-    return;
-  }
-  var oldVector = penguin_box.getLinearVelocity(); // Vector of velocity the player already has
-  var penguinVec = new THREE.Vector3(0, oldVector.y, oldVector.z);
-  if (moveLeft) {
-      var penguinVec = new THREE.Vector3(
-          -1 * speed,
-          oldVector.y,
-          oldVector.z
-      );
-  }
-  if (moveRight) {
-      var penguinVec = new THREE.Vector3(1 * speed, oldVector.y, oldVector.z);
-  }
-  penguin_box.setLinearVelocity(penguinVec); // We use an updated vector to redefine its velocity
+    if (!loaded) {
+        return;
+    }
+    var oldVector = penguin_box.getLinearVelocity(); // Vector of velocity the player already has
+    var penguinVec = new THREE.Vector3(0, oldVector.y, oldVector.z);
+    if (moveLeft) {
+        var penguinVec = new THREE.Vector3(
+            -1 * speed,
+            oldVector.y,
+            oldVector.z
+        );
+    }
+    if (moveRight) {
+        var penguinVec = new THREE.Vector3(1 * speed, oldVector.y, oldVector.z);
+    }
+    penguin_box.setLinearVelocity(penguinVec); // We use an updated vector to redefine its velocity
 }
 
 function setupKeyControls() {
-  document.onkeydown = function (e) {
-      switch (e.keyCode) {
-          case 37: //좌
-              moveLeft = true;
-              break;
-          case 39: //우
-              moveRight = true;
-              break;
-      }
-      penguin_box.__dirtyPosition = true;
-      penguin_box.__dirtyRotation = true;
-  };
+    document.onkeydown = function (e) {
+        switch (e.keyCode) {
+            case 37: //좌
+                moveLeft = true;
+                break;
+            case 39: //우
+                moveRight = true;
+                break;
+        }
+        penguin_box.__dirtyPosition = true;
+        penguin_box.__dirtyRotation = true;
+    };
 
-  document.onkeyup = function (e) {
-      switch (e.keyCode) {
-          case 37: //좌
-              moveLeft = false;
-              break;
-          case 39: //우
-              moveRight = false;
-              break;
-      }
-  };
+    document.onkeyup = function (e) {
+        switch (e.keyCode) {
+            case 37: //좌
+                moveLeft = false;
+                break;
+            case 39: //우
+                moveRight = false;
+                break;
+        }
+    };
 }
+
+const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
