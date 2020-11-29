@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+
+  <title>Penguin's Adventure</title>
+  <style>
+	@import url('https://fonts.googleapis.com/css?family=Varela+Round');
+
+    html,
+    body {
+      overflow-x: hidden;
+      height: 100%;
+    }
+
+    body {
+      background: rgb(255, 255, 255);
+      padding: 0;
+      margin: 0;
+      font-family: 'Varela Round', sans-serif;
+    }
+
+    .header {
+      display: block;
+      margin: 0 auto;
+      width: 1280px;
+      max-width: 100%;
+      box-shadow: none;
+      background-color: #4a81e6;
+      position: fixed;
+      height: 60px !important;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .main {
+      margin: 0 auto;
+      display: block;
+      height: 210px;
+      margin-top: 60px;
+    }
+
+    .mainInner {
+      display: table;
+      height: 100%;
+      width: 100%;
+      text-align: center;
+    }
+
+    .mainInner div {
+      display: table-cell;
+      vertical-align: middle;
+      font-size: 3em;
+      font-weight: bold;
+      letter-spacing: 1.25px;
+    }
+
+    #sidebarMenu {
+      height: 100%;
+      position: fixed;
+      left: 0;
+      width: 250px;
+      margin-top: 60px;
+      transform: translateX(-250px);
+      transition: transform 250ms ease-in-out;
+      background: linear-gradient(180deg, #4a81e6 0%, #4effff 100%);
+    }
+
+    .sidebarMenuInner {
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .sidebarMenuInner li {
+      list-style: none;
+      color: #fff;
+      text-transform: uppercase;
+      font-weight: bold;
+      padding: 20px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .sidebarMenuInner li span {
+      display: block;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.50);
+    }
+
+    .sidebarMenuInner li a {
+      color: #fff;
+      text-transform: uppercase;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    input[type="checkbox"]:checked~#sidebarMenu {
+      transform: translateX(0);
+    }
+
+    input[type=checkbox] {
+      transition: all 0.3s;
+      box-sizing: border-box;
+      display: none;
+    }
+
+    .sidebarIconToggle {
+      transition: all 0.3s;
+      box-sizing: border-box;
+      cursor: pointer;
+      position: absolute;
+      z-index: 99;
+      height: 100%;
+      width: 100%;
+      top: 22px;
+      left: 15px;
+      height: 22px;
+      width: 22px;
+    }
+
+    .spinner {
+      transition: all 0.3s;
+      box-sizing: border-box;
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      background-color: #fff;
+    }
+
+    .horizontal {
+      transition: all 0.3s;
+      box-sizing: border-box;
+      position: relative;
+      float: left;
+      margin-top: 3px;
+    }
+
+    .diagonal.part-1 {
+      position: relative;
+      transition: all 0.3s;
+      box-sizing: border-box;
+      float: left;
+    }
+
+    .diagonal.part-2 {
+      transition: all 0.3s;
+      box-sizing: border-box;
+      position: relative;
+      float: left;
+      margin-top: 3px;
+    }
+
+    input[type=checkbox]:checked~.sidebarIconToggle>.horizontal {
+      transition: all 0.3s;
+      box-sizing: border-box;
+      opacity: 0;
+    }
+
+    input[type=checkbox]:checked~.sidebarIconToggle>.diagonal.part-1 {
+      transition: all 0.3s;
+      box-sizing: border-box;
+      transform: rotate(135deg);
+      margin-top: 8px;
+    }
+
+    input[type=checkbox]:checked~.sidebarIconToggle>.diagonal.part-2 {
+      transition: all 0.3s;
+      box-sizing: border-box;
+      transform: rotate(-135deg);
+      margin-top: -9px;
+	}
+	
+	    /***************** help-tip *****************/
+    /* The icon */
+    .help-tip {
+      position: absolute;
+      top: 10%;
+      left: 90%;
+      transform: translate(-50%, -50%);
+      margin: auto;
+      text-align: center;
+      border: 3px solid rgb(255, 255, 255);
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-size: 15px;
+      line-height: 16px;
+      cursor: default;
+    }
+
+    .help-tip:before {
+      content: '?';
+      font-family: sans-serif;
+      font-weight: normal;
+      color: rgb(255, 255, 255);
+    }
+
+    .help-tip:hover p {
+      display: block;
+      transform-origin: 100% 0%;
+      -webkit-animation: fadeIn 0.3s ease;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* The tooltip */
+    .help-tip p {
+      display: none;
+      font-family: sans-serif;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      text-align: center;
+      background-color: #FFFFFF;
+      padding: 12px 16px;
+      width: 178px;
+      height: auto;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 5%);
+      border-radius: 3px;
+      /* 	border: 1px solid #E0E0E0; */
+      box-shadow: 0 0px 20px 0 rgba(0, 0, 0, 0.1);
+      color: #37393D;
+      font-size: 12px;
+      line-height: 18px;
+      z-index: 99;
+    }
+
+    .help-tip p a {
+      color: #067df7;
+      text-decoration: none;
+    }
+
+    .help-tip p a:hover {
+      text-decoration: underline;
+    }
+
+    /* The pointer of the tooltip */
+    .help-tip p:before {
+      position: absolute;
+      content: '';
+      width: 0;
+      height: 0;
+      border: 10px solid transparent;
+      border-bottom-color: #FFFFFF;
+      top: -9px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Prevents the tooltip from being hidden */
+    .help-tip p:after {
+      width: 10px;
+      height: 40px;
+      content: '';
+      position: absolute;
+      top: -40px;
+      left: 0;
+    }
+
+    /* CSS animation */
+    @-webkit-keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 100%;
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 100%;
+      }
+    }
+  </style>
+
+  <!-- javascript -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="../../node_modules/three/build/three.js"></script>
+  <script type="text/javascript" src="../../Resources/Physijs/physi.js"></script>
+  <script type="text/javascript" src="../../Resources/Physijs/physijs_worker.js"></script>
+  <script src="../../node_modules/three/examples/js/loaders/MTLLoader.js"></script>
+  <script src="../../node_modules/three/examples/js/loaders/OBJLoader.js"></script>
+
+</head>
+
+<body>
+	
+  <!-- menu -->
+  <div class="header"></div>
+  <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
+  <label for="openSidebarMenu" class="sidebarIconToggle">
+    <div class="spinner diagonal part-1"></div>
+    <div class="spinner horizontal"></div>
+    <div class="spinner diagonal part-2"></div>
+  </label>
+  <div id="sidebarMenu">
+    <ul class="sidebarMenuInner">
+		<li><a href="home.html">홈화면</a></li>
+      	<li>게임 방법<span class="help-tip">
+          <p>좌우 화살표 키로 펭귄을 움직일 수 있어요. 스페이스 바를 누르면 점프도 합니다!</p>
+        </span></li>
+      	<li><a href="info.html" target="_blank">개발자 정보</a></li>
+    </ul>
+  </div>
+
+   <!-- timer -->
+   <div id='center' class="main center">
+    <div class="col-md-6 well">
+      <center>
+        <h1 id="timer" style="font-size:45px;">PUSH THE START BUTTON!</h1>
+        <h6 id="score" style="font-size:25px;">Score : 0</h6>
+      </center>
+      <br />
+      <div style="text-align:center;">
+        <button class="btn btn-success" onclick="startTimer(this)">GAME START</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- background music -->
+  <iframe src="silence.mp3" allow="autoplay" id="audio" style="display:none"></iframe>
+  <audio id="audio" autoplay>
+    <source src="Jingle Bells for Kids Instrumental 2016-NOC-NO Copyright Music library-Royalty free background music.mp3">
+  </audio>
+
+  <!-- camera position & rotation -->
+  <!--<div id=monitor>Camera Position</div>
+    <div id=rotation>Camera Rotation</div>-->
+  <script src="../js/sceneMaker_3rd.js"></script>
+</body>
+
+</html>
