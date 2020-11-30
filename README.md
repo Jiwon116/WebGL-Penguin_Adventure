@@ -40,6 +40,6 @@ __● Developer__
 
 | ID         | Name                 | Email                      |
 | ---------- | :------------------- | :------------------------- |
-| 201533659  | Lee-Namjun(이남준)   | dlskawns96@gmail.com)      |
+| 201533659  | Lee-Namjun(이남준)   | dlskawns96@gmail.com       |
 | 201835434  | Kim-Joohyun(김주현)  | infenitel@naver.com        |
 | 201835538  | Choi-Jiwon(최지원)   | ji_1106@naver.com          |
