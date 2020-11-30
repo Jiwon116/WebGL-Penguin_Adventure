@@ -2,7 +2,8 @@
 A game in which player move character and survive as long as possible without hitting obstacles to gain high scores
 ------------------------------------------------------------------
 ---
-__● How to play__
+__● How to play__  
+![move](https://user-images.githubusercontent.com/64013256/100562457-27c1e580-32ff-11eb-924e-47cb50b69977.jpg)
 * Use the directional keys to move from side to side.
 * Jump using the space bar
 
@@ -21,11 +22,15 @@ __● Rules__
 __● Key Features__
 
 
-≫ Two game modes
-- First person view and Third person view
+≫ Two game modes  
+- First person view  
+![image](https://user-images.githubusercontent.com/64013256/100562572-71aacb80-32ff-11eb-8ec5-04ed1a66e819.png)
 
+- Third person view  
+![image](https://user-images.githubusercontent.com/64013256/100562525-5a6bde00-32ff-11eb-9f75-8eb9be399fd6.png)
 
-≫ Various forms of obstacles and music
+≫ Various forms of obstacles and music  
+![obs](https://user-images.githubusercontent.com/64013256/100562945-7623b400-3300-11eb-9770-22f68abf1b5a.jpg)  
 - Snowman, Rocks, Ice Sheet etc.
 
 
@@ -37,9 +42,7 @@ __● Key Features__
 - Over time, obstacles appear faster and the game becomes more difficult
 ***
 __● Developer__  
-
-| ID         | Name                 | Email                      |
-| ---------- | :------------------- | :------------------------- |
-| 201533659  | Lee-Namjun(이남준)   | dlskawns96@gmail.com       |
-| 201835434  | Kim-Joohyun(김주현)  | infenitel@naver.com        |
-| 201835538  | Choi-Jiwon(최지원)   | ji_1106@naver.com          |
+ 
+- LeeNamjun(dlskawns96@gmail.com)
+- ChoiJiwon(ji_ 1106@naver.com)
+- KimJoohyun(infenitel@naver.com)
