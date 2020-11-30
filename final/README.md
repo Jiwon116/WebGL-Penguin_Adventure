@@ -1,6 +1,7 @@
 # WebGL-Penguin_Adventure
 A game in which player move character and survive as long as possible without hitting obstacles to gain high scores
 ------------------------------------------------------------------
+---
 __● How to play__
 * Use the directional keys to move from side to side.
 * Jump using the space bar
